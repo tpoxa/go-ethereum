@@ -448,6 +448,7 @@ func calcDifficultyFrontier(time uint64, parent *types.Header) *big.Int {
 func (ethash *Ethash) VerifySeal(chain consensus.ChainReader, header *types.Header) error {
 	// If we're running a fake PoW, accept any seal as valid
 	if ethash.fakeMode {
+		fmt.Printf("fake mode is ON\n")
 		time.Sleep(ethash.fakeDelay)
 		if ethash.fakeFail == header.Number.Uint64() {
 			return errInvalidPoW
@@ -475,8 +476,10 @@ func (ethash *Ethash) VerifySeal(chain consensus.ChainReader, header *types.Head
 	if ethash.tester {
 		size = 32 * 1024
 	}
+
 	digest, result := hashimotoLight(size, cache, header.HashNoNonce().Bytes(), header.Nonce.Uint64())
 	if !bytes.Equal(header.MixDigest[:], digest) {
+		fmt.Printf("invalid mix digest:\n % x\n VS % x\n", digest, header.MixDigest[:])
 		return errInvalidMixDigest
 	}
 	target := new(big.Int).Div(maxUint256, header.Difficulty)
