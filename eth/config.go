@@ -63,7 +63,6 @@ func init() {
 	} else {
 		DefaultConfig.EthashDatasetDir = filepath.Join(home, ".ethash")
 	}
-	DefaultConfig.PowFake = true
 }
 
 //go:generate gencodec -type Config -field-override configMarshaling -formats toml -out gen_config.go
